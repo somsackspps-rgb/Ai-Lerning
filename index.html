@@ -86,7 +86,7 @@
                     </div>
                     <div>
                         <span class="font-bold text-lg bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">AI Learning Hub</span>
-                        <span class="block text-xs text-slate-400">ວິສະວະກຳ & ການຄຸ້ມຄອງເອກະສານ</span>
+                        <span class="block text-xs text-slate-400">ພັດທະນາໂດຍ: <strong class="text-brand-300">ສົມສັກ ສີແພງປະເສີດ</strong></span>
                     </div>
                 </div>
 
@@ -133,6 +133,9 @@
 
         <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2">
+            <div class="px-3 py-1.5 text-xs text-brand-400 border-b border-slate-800 mb-2">
+                <i class="fa-solid fa-user-gear mr-1"></i> ຜູ້ພັດທະນາ: ສົມສັກ ສີແພງປະເສີດ
+            </div>
             <button onclick="switchTab('home')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
                 <i class="fa-solid fa-house w-6"></i>ໜ້າຫຼັກ
             </button>
@@ -166,9 +169,14 @@
             <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 border border-slate-700/60 p-8 sm:p-12 shadow-2xl">
                 <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 max-w-3xl">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-500/20 text-brand-300 border border-brand-500/30 mb-4">
-                        <i class="fa-solid fa-rocket mr-1.5"></i> ຫຼັກສູດການຮຽນຮູ້ AI ສຳລັບການເຮັດວຽກຈິງ
-                    </span>
+                    <div class="flex flex-wrap items-center gap-2 mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-500/20 text-brand-300 border border-brand-500/30">
+                            <i class="fa-solid fa-rocket mr-1.5"></i> ຫຼັກສູດການຮຽນຮູ້ AI ສຳລັບການເຮັດວຽກຈິງ
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                            <i class="fa-solid fa-code mr-1.5"></i> ຜູ້ພັດທະນາ: ສົມສັກ ສີແພງປະເສີດ
+                        </span>
+                    </div>
                     <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight mb-4">
                         ຫຼັກສູດການຮຽນຮູ້ AI ຈາກເລີ່ມຕົ້ນ <br>
                         <span class="bg-gradient-to-r from-brand-400 via-indigo-300 to-accent-500 bg-clip-text text-transparent">ຫາການນຳໃຊ້ຈິງໃນງານວິສະວະກຳ</span>
@@ -321,12 +329,17 @@
 
         <!-- ==================== TAB: LEVEL 1 ==================== -->
         <div id="tab-level1" class="tab-content space-y-8">
-            <div class="border-b border-slate-800 pb-5">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    ລະດັບ 1 (Level 1)
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນພື້ນຖານ: Foundation & Prompt Engineering</h2>
-                <p class="text-slate-400 text-sm mt-1">ເຂົ້າໃຈຫຼັກການທຳງານຂອງ AI ແລະ ການສ້າງคำสั่ง (Prompting) ຢ່າງມີປະສິດທິພາບ</p>
+            <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        ລະດັບ 1 (Level 1)
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນພື້ນຖານ: Foundation & Prompt Engineering</h2>
+                    <p class="text-slate-400 text-sm mt-1">ເຂົ້າໃຈຫຼັກການທຳງານຂອງ AI ແລະ ການສ້າງคำสั่ง (Prompting) ຢ່າງມີປະສິດທິພາບ</p>
+                </div>
+                <div class="text-xs text-slate-400 bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 self-start sm:self-auto">
+                    <i class="fa-solid fa-user-pen text-emerald-400 mr-1"></i> ສ້າງໂດຍ: <strong>ສົມສັກ ສີແພງປະເສີດ</strong>
+                </div>
             </div>
 
             <!-- Lesson Checklist 1 -->
@@ -429,12 +442,17 @@
 
         <!-- ==================== TAB: LEVEL 2 ==================== -->
         <div id="tab-level2" class="tab-content space-y-8">
-            <div class="border-b border-slate-800 pb-5">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    ระດັບ 2 (Level 2)
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນກາງ: Data Analytics & Technical Workflows</h2>
-                <p class="text-slate-400 text-sm mt-1">ການນຳໃຊ້ AI ໃນການຈັດການຂໍ້ມູນ, ວິເຄາະຂໍ້ມູນເທັກນິກ ແລະ ງານວິສະວະກຳ</p>
+            <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                        ระດັບ 2 (Level 2)
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນກາງ: Data Analytics & Technical Workflows</h2>
+                    <p class="text-slate-400 text-sm mt-1">ການນຳໃຊ້ AI ໃນການຈັດການຂໍ້ມູນ, ວິເຄາະຂໍ້ມູນເທັກນິກ ແລະ ງານວິສະວະກຳ</p>
+                </div>
+                <div class="text-xs text-slate-400 bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 self-start sm:self-auto">
+                    <i class="fa-solid fa-user-pen text-blue-400 mr-1"></i> ສ້າງໂດຍ: <strong>ສົມສັກ ສີແພງປະເສີດ</strong>
+                </div>
             </div>
 
             <!-- Lesson Checklist 2 -->
@@ -517,12 +535,17 @@
 
         <!-- ==================== TAB: LEVEL 3 ==================== -->
         <div id="tab-level3" class="tab-content space-y-8">
-            <div class="border-b border-slate-800 pb-5">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                    ລະດັບ 3 (Level 3)
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນສູງ: System Integration & Process Automation</h2>
-                <p class="text-slate-400 text-sm mt-1">ການເຊື່ອມຕໍ່ AI ເຂົ້າກັບລະບົບເອກະສານ, ຖານຂໍ້ມູນ ແລະ Automation Workflows</p>
+            <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                        ລະດັບ 3 (Level 3)
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນສູງ: System Integration & Process Automation</h2>
+                    <p class="text-slate-400 text-sm mt-1">ການເຊື່ອມຕໍ່ AI ເຂົ້າກັບລະບົບເອກະສານ, ຖານຂໍ້ມູນ ແລະ Automation Workflows</p>
+                </div>
+                <div class="text-xs text-slate-400 bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 self-start sm:self-auto">
+                    <i class="fa-solid fa-user-pen text-purple-400 mr-1"></i> ສ້າງໂດຍ: <strong>ສົມສັກ ສີແພງປະເສີດ</strong>
+                </div>
             </div>
 
             <!-- Lesson Checklist 3 -->
@@ -582,12 +605,17 @@
 
         <!-- ==================== TAB: LEVEL 4 ==================== -->
         <div id="tab-level4" class="tab-content space-y-8">
-            <div class="border-b border-slate-800 pb-5">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    ລະດັບ 4 (Level 4)
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນຊ່ຽວຊານ: Custom AI Solutions & IoT/GIS Integration</h2>
-                <p class="text-slate-400 text-sm mt-1">ການອອກແບບລະບົບ AI ເພື່ອແກ້ໄຂບັນຫາສະເພາະທາງ, ເຊື່ອມຕໍ່ SCADA, GIS, ແລະ Industrial IoT</p>
+            <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        ລະດັບ 4 (Level 4)
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນຊ່ຽວຊານ: Custom AI Solutions & IoT/GIS Integration</h2>
+                    <p class="text-slate-400 text-sm mt-1">ການອອກແບບລະບົບ AI ເພື່ອແກ້ໄຂບັນຫາສະເພາະທາງ, ເຊື່ອມຕໍ່ SCADA, GIS, ແລະ Industrial IoT</p>
+                </div>
+                <div class="text-xs text-slate-400 bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 self-start sm:self-auto">
+                    <i class="fa-solid fa-user-pen text-amber-400 mr-1"></i> ສ້າງໂດຍ: <strong>ສົມສັກ ສີແພງປະເສີດ</strong>
+                </div>
             </div>
 
             <!-- Lesson Checklist 4 -->
@@ -633,9 +661,14 @@
 
         <!-- ==================== TAB: PROMPTS & TOOLS LIBRARY ==================== -->
         <div id="tab-prompts" class="tab-content space-y-8">
-            <div class="border-b border-slate-800 pb-5">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">ຄັງ Prompt ພ້ອມໃຊ້ & ລິ້ງເຄື່ອງມື AI</h2>
-                <p class="text-slate-400 text-sm mt-1">ລວມ Prompt ສຳເລັດຮູບສຳລັບງານວິສະວະກຳ ງານເອກະສານ ແລະ ເຄື່ອງມື AI ຊັ້ນນຳ</p>
+            <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">ຄັງ Prompt ພ້ອມໃຊ້ & ລິ້ງເຄື່ອງມື AI</h2>
+                    <p class="text-slate-400 text-sm mt-1">ລວມ Prompt ສຳເລັດຮູບສຳລັບງານວິສະວະກຳ ງານເອກະສານ ແລະ ເຄື່ອງມື AI ຊັ້ນນຳ</p>
+                </div>
+                <div class="text-xs text-slate-400 bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 self-start sm:self-auto">
+                    <i class="fa-solid fa-user-check text-brand-400 mr-1"></i> รวบรวมโดย: <strong>ສົມສັກ ສີແພງປະເສີດ</strong>
+                </div>
             </div>
 
             <!-- Search & Category Filter -->
@@ -763,12 +796,17 @@
 
         <!-- ==================== TAB: QUIZ ==================== -->
         <div id="tab-quiz" class="tab-content space-y-8">
-            <div class="border-b border-slate-800 pb-5">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20">
-                    Knowledge Check
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ແບບທົດສອບປະເມີນຄວາມຮູ້ (AI Evaluation Quiz)</h2>
-                <p class="text-slate-400 text-sm mt-1">ທົດສອບຄວາມເຂົ້າໃຈຫຼັກການນຳໃຊ້ AI ທັງ 4 ລະດັບ</p>
+            <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20">
+                        Knowledge Check
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ແບບທົດສອບປະເມີນຄວາມຮູ້ (AI Evaluation Quiz)</h2>
+                    <p class="text-slate-400 text-sm mt-1">ທົດສອບຄວາມເຂົ້າໃຈຫຼັກການນຳໃຊ້ AI ທັງ 4 ລະດັບ</p>
+                </div>
+                <div class="text-xs text-slate-400 bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 self-start sm:self-auto">
+                    <i class="fa-solid fa-graduation-cap text-pink-400 mr-1"></i> ออกแบบโดย: <strong>ສົມສັກ ສີແພງປະເສີດ</strong>
+                </div>
             </div>
 
             <!-- Quiz Container -->
@@ -846,9 +884,12 @@
 
     <!-- Footer -->
     <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="text-slate-400 font-medium">
+                <i class="fa-solid fa-code text-brand-400 mr-1"></i> ອອກແບບ ແລະ ພັດທະນາລະບົບໂດຍ: <strong class="text-white">ສົມສັກ ສີແພງປະເສີດ</strong>
+            </p>
             <p>© 2026 AI Learning Roadmap for Engineers & Document Management. All rights reserved.</p>
-            <p class="mt-1">ສ້າງขึ้นเพื่อการเรียนรู้การใช้งาน AI ในการทำงานจริง ภาษาลาว</p>
+            <p class="text-slate-600">ສ້າງขึ้นเพื่อการเรียนรู้การใช้งาน AI ในการทำงานจริง ภาษาลาว</p>
         </div>
     </footer>
 
@@ -1052,10 +1093,10 @@
 
             if(score === 3) {
                 resultBox.className = "text-sm font-bold p-3 rounded-lg bg-emerald-500/20 border border-emerald-500 text-emerald-300";
-                resultBox.innerHTML = `<i class="fa-solid fa-trophy mr-2"></i> ຍອດຢ່ຽມ! ທ່ານໄດ້ ${score}/3 ຄະແນນ (ຜ່ານ 100%)`;
+                resultBox.innerHTML = `<i class="fa-solid fa-trophy mr-2"></i> ຍອດຢ່ຽມ! ທ່ານໄດ້ ${score}/3 ຄະແນນ (ຜ່ານ 100%) - ອອກໃບຢັ້ງຢືນໂດຍ ສົມສັກ ສີແພງປະເສີດ`;
             } else {
                 resultBox.className = "text-sm font-bold p-3 rounded-lg bg-amber-500/20 border border-amber-500 text-amber-300";
-                resultBox.innerHTML = `<i class="fa-solid fa-circle-info mr-2"></i> ທ່ານໄດ້ ${score}/3 ຄະແນນ. ລອງທົບທວນບົດຮຽນ ແລະ ທົດລອງໃໝ່ອີກຄັ້ງ!`;
+                resultBox.innerHTML = `<i class="fa-solid fa-circle-info mr-2"></i> ທ່ານໄດ້ ${score}/3 ຄະແນນ. ລອງທົບທວນບົດຮຽນ ແລະ ທົດລອງໃໝ່ອີກຄັ້ງ! (ພັດທະນາໂດຍ ສົມສັກ ສີແພງປະເສີດ)`;
             }
         }
     </script>
