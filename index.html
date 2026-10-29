@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="lo" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ຫຼັກສູດການຮຽນຮູ້ AI ຈາກເລີ່ມຕົ້ນຫາການນຳໃຊ້ຈິງ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Lao Language -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        },
+                        accent: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans Lao', 'Phetsarath OT', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans Lao', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-brand-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <span id="toast-message">ສໍາເລັດ!</span>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
+                        <i class="fa-solid fa-brain text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">AI Learning Hub</span>
+                        <span class="block text-xs text-slate-400">ວິສະວະກຳ & ການຄຸ້ມຄອງເອກະສານ</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2 text-sm font-medium">
+                    <button onclick="switchTab('home')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition active" data-tab="home">
+                        <i class="fa-solid fa-house mr-1.5"></i>ໜ້າຫຼັກ
+                    </button>
+                    <button onclick="switchTab('level1')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition" data-tab="level1">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span>1. ຂັ້ນພື້ນຖານ
+                    </button>
+                    <button onclick="switchTab('level2')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition" data-tab="level2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-blue-400 mr-1.5"></span>2. ຂັ້ນກາງ
+                    </button>
+                    <button onclick="switchTab('level3')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition" data-tab="level3">
+                        <span class="inline-block w-2 h-2 rounded-full bg-purple-400 mr-1.5"></span>3. ຂັ້ນສູງ
+                    </button>
+                    <button onclick="switchTab('level4')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition" data-tab="level4">
+                        <span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>4. ຂັ້ນຊ່ຽວຊານ
+                    </button>
+                    <button onclick="switchTab('prompts')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition" data-tab="prompts">
+                        <i class="fa-solid fa-terminal mr-1.5 text-brand-400"></i>ຄັງ Prompt
+                    </button>
+                    <button onclick="switchTab('quiz')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition" data-tab="quiz">
+                        <i class="fa-solid fa-vial mr-1.5 text-pink-400"></i>ແບບທົດສອບ
+                    </button>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-3">
+                    <!-- Progress summary badge -->
+                    <div class="hidden sm:flex items-center bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-medium">
+                        <i class="fa-solid fa-chart-pie text-brand-400 mr-2"></i>
+                        <span>ຄວາມຄືບໜ້າ: <strong id="global-progress-percent" class="text-brand-400">0%</strong></span>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('home')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-house w-6"></i>ໜ້າຫຼັກ
+            </button>
+            <button onclick="switchTab('level1')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
+                <span class="w-3 h-3 rounded-full bg-emerald-400 mr-3"></span>ລະດັບ 1: ຂັ້ນພື້ນຖານ
+            </button>
+            <button onclick="switchTab('level2')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
+                <span class="w-3 h-3 rounded-full bg-blue-400 mr-3"></span>ລະດັບ 2: ຂັ້ນກາງ
+            </button>
+            <button onclick="switchTab('level3')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
+                <span class="w-3 h-3 rounded-full bg-purple-400 mr-3"></span>ລະດັບ 3: ຂັ້ນສູງ
+            </button>
+            <button onclick="switchTab('level4')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
+                <span class="w-3 h-3 rounded-full bg-amber-400 mr-3"></span>ລະດັບ 4: ຂັ້ນຊ່ຽວຊານ
+            </button>
+            <button onclick="switchTab('prompts')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-terminal text-brand-400 w-6"></i>ຄັງ Prompt & ເຄື່ອງມື
+            </button>
+            <button onclick="switchTab('quiz')" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-vial text-pink-400 w-6"></i>ແບບທົດສອບປະເມີນ
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ==================== TAB: HOME ==================== -->
+        <div id="tab-home" class="tab-content active space-y-10">
+            <!-- Hero Section -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 border border-slate-700/60 p-8 sm:p-12 shadow-2xl">
+                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-3xl">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-500/20 text-brand-300 border border-brand-500/30 mb-4">
+                        <i class="fa-solid fa-rocket mr-1.5"></i> ຫຼັກສູດການຮຽນຮູ້ AI ສຳລັບການເຮັດວຽກຈິງ
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight mb-4">
+                        ຫຼັກສູດການຮຽນຮູ້ AI ຈາກເລີ່ມຕົ້ນ <br>
+                        <span class="bg-gradient-to-r from-brand-400 via-indigo-300 to-accent-500 bg-clip-text text-transparent">ຫາການນຳໃຊ້ຈິງໃນງານວິສະວະກຳ</span>
+                    </h1>
+                    <p class="text-base sm:text-lg text-slate-300 leading-relaxed mb-8">
+                        ຍົກລະດັບທັກສະການເຮັດວຽກດ້ວຍ AI ສຳລັບງານວິສະວະກຳ (Engineering), ການຈັດການເອກະສານ (Document Management), ແລະ ການພັດທະນາຕົນເອງ. ຮຽນຮູ້ນຳໃຊ້ໄດ້ຈິງ ຜ່ານ 4 ລະດັບການຮຽນຮູ້ທີ່ເປັນລະບົບ.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="switchTab('level1')" class="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold shadow-lg shadow-brand-500/25 transition duration-200 flex items-center">
+                            ເລີ່ມຮຽນຮູ້ເລີ່ມຕົ້ນ (Level 1) <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                        </button>
+                        <button onclick="switchTab('prompts')" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold transition duration-200 flex items-center">
+                            <i class="fa-solid fa-terminal mr-2 text-brand-400"></i> ຄັງ Prompt ພ້ອມໃຊ້
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Progress Bar Card -->
+            <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 shadow-lg">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center">
+                            <i class="fa-solid fa-list-check text-brand-400 mr-2"></i> ຄວາມຄືບໜ້າການຮຽນຮູ້ຂອງທ່ານ
+                        </h2>
+                        <p class="text-xs text-slate-400">ໝາຍຕິກບົດຮຽນທີ່ຮຽນສຳເລັດແລ້ວໃນແຕ່ລະລະດັບເພື່ອຕິດຕາມຜົນ</p>
+                    </div>
+                    <span id="progress-status-text" class="text-sm font-semibold text-brand-300 bg-brand-950/60 px-3 py-1 rounded-lg border border-brand-800/50">
+                        완료: 0 / 12 ບົດ
+                    </span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+                    <div id="main-progress-bar" class="bg-gradient-to-r from-brand-500 to-accent-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- 4 Roadmap Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Level 1 Card -->
+                <div onclick="switchTab('level1')" class="group cursor-pointer bg-slate-800/60 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500/50 rounded-2xl p-6 transition duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition duration-200">
+                            01
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition">ຂັ້ນພື້ນຖານ (Basic)</h3>
+                        <p class="text-xs text-slate-400 mb-4">Prompt Engineering, ໂຄງສ້າງການສັ່ງງານ AI, ການຮຽນຮູ້ Role-Task-Context-Format.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i>ຫຼັກການ Prompting Core</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i>ການກວດສອບ & ສຸດເອກະສານ</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i>ເຄື່ອງມື Prompt Builder</li>
+                        </ul>
+                    </div>
+                    <span class="text-xs font-semibold text-emerald-400 flex items-center">
+                        ເຂົ້າสู่ບົດຮຽນ <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+                    </span>
+                </div>
+
+                <!-- Level 2 Card -->
+                <div onclick="switchTab('level2')" class="group cursor-pointer bg-slate-800/60 hover:bg-slate-800 border border-slate-700 hover:border-blue-500/50 rounded-2xl p-6 transition duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition duration-200">
+                            02
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition">ຂັ້ນກາງ (Intermediate)</h3>
+                        <p class="text-xs text-slate-400 mb-4">ການວິເຄາະຂໍ້ມູນ, ງານເທັກນິກວິສະວະກຳ, Minimum Night Flow, Data Anomaly.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i>ວິເຄາະຂໍ້ມູນ CSV/Excel</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i>ປຽບທຽບ Spec ອຸປະກອນ</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i>ດຶງຂໍ້ມູນຈາກ PDF/OCR</li>
+                        </ul>
+                    </div>
+                    <span class="text-xs font-semibold text-blue-400 flex items-center">
+                        ເຂົ້າสู่ບົດຮຽນ <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+                    </span>
+                </div>
+
+                <!-- Level 3 Card -->
+                <div onclick="switchTab('level3')" class="group cursor-pointer bg-slate-800/60 hover:bg-slate-800 border border-slate-700 hover:border-purple-500/50 rounded-2xl p-6 transition duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition duration-200">
+                            03
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition">ຂັ້ນສູງ (Advanced)</h3>
+                        <p class="text-xs text-slate-400 mb-4">RAG Knowledge Base, Automation Workflows, ການປະເມີນ O&M Maintenance Log.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-purple-400 mr-2"></i>ສ້າງ Bot ອ່ານຄູ່ມື SOP</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-purple-400 mr-2"></i>ອັດໂຕໂນມັດເອກະສານ</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-purple-400 mr-2"></i>Predictive Maintenance</li>
+                        </ul>
+                    </div>
+                    <span class="text-xs font-semibold text-purple-400 flex items-center">
+                        ເຂົ້າสู่ບົດຮຽນ <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+                    </span>
+                </div>
+
+                <!-- Level 4 Card -->
+                <div onclick="switchTab('level4')" class="group cursor-pointer bg-slate-800/60 hover:bg-slate-800 border border-slate-700 hover:border-amber-500/50 rounded-2xl p-6 transition duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition duration-200">
+                            04
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition">ຂັ້ນຊ່ຽວຊານ (Expert)</h3>
+                        <p class="text-xs text-slate-400 mb-4">Custom AI Solutions, เชื่อมต่อ Industrial IoT, GIS, SCADA, Management Non-Revenue Water.</p>
+                        <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-2"></i>ພັດທະນາ No-Code Dify Bot</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-2"></i>ເຊື່ອມຕໍ່ SCADA & GIS</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-2"></i>ລະບົບຄຸ້ມຄອງ NRW Water</li>
+                        </ul>
+                    </div>
+                    <span class="text-xs font-semibold text-amber-400 flex items-center">
+                        ເຂົ້າสู่ບົດຮຽນ <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Key Target Application Domains -->
+            <div class="bg-slate-800/50 border border-slate-700/70 rounded-2xl p-6 sm:p-8">
+                <h3 class="text-xl font-bold text-white mb-6 text-center">ຂົງເຂດການນຳໃຊ້ AI ຫຼັກໃນຫຼັກສູດນີ້</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-lg mb-3">
+                            <i class="fa-solid fa-compass-drafting"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">ງານວິສະວະກຳ (Engineering)</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            ວິເຄາະຂໍ້ມູນແຮງດັນ, ອັດຕານ້ຳໄຫຼ (Flow Rate), ຄຳນວນສູດວິສະວະກຳ, ກວດຫາທໍ່ລົ່ວ (NRW), ແລະ ຕິດຕາມສະພາບອຸປະກອນດ້ວຍ Industrial IoT & SCADA.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg mb-3">
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">ງານເອກະສານ (Document Mgmt)</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            ສັງເກດ ແລະ ສຸບລາຍງານການປະຊຸມ, ຮ່າງສັນຍາຈັດຊື້ຈັດຈ້າງ, ດຶງຂໍ້ຄວາມຈາກ PDF ແປລພາສາເທັກນິກ, ແລະ ສ້າງ Knowledge Base ສຳລັບ SOP ວິສະວະກຳ.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg mb-3">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">ການພັດທະນາຕົນເອງ (Personal Dev)</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            ໃຊ້ AI ເປັນຄູຝຶກສ່ວນຕົວ (Socrates AI Tutor), ສະຫຼຸບປຶ້ມເທັກນິກພາສາຕ່າງປະເທດ, ຝຶກພາສາອັງກິດສຳລັບວິສະວະກອນ, ແລະ ວາງແຜນການເຮັດວຽກ.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: LEVEL 1 ==================== -->
+        <div id="tab-level1" class="tab-content space-y-8">
+            <div class="border-b border-slate-800 pb-5">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    ລະດັບ 1 (Level 1)
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນພື້ນຖານ: Foundation & Prompt Engineering</h2>
+                <p class="text-slate-400 text-sm mt-1">ເຂົ້າໃຈຫຼັກການທຳງານຂອງ AI ແລະ ການສ້າງคำสั่ง (Prompting) ຢ່າງມີປະສິດທິພາບ</p>
+            </div>
+
+            <!-- Lesson Checklist 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-emerald-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l1_1')" id="check_l1_1" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">1.1 ໂຄງສ້າງ Prompting Core</span>
+                        <span class="text-xs text-slate-400">Role, Task, Context, Constraints, Format</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-emerald-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l1_2')" id="check_l1_2" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">1.2 ງານເອກະສານ & ແປພາສາ</span>
+                        <span class="text-xs text-slate-400">ການກວດໄວຍາກອນ, ສຸບອີເມລ ແລະ ເອກະສານ</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-emerald-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l1_3')" id="check_l1_3" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">1.3 ພັດທະນາຕົນເອງດ້ວຍ AI</span>
+                        <span class="text-xs text-slate-400">ການຕັ້ງຄຳຖາມທົດສອບ & AI Tutor</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Content Detail -->
+            <div class="space-y-6">
+                <!-- Concept Card -->
+                <div class="bg-slate-800/60 rounded-2xl p-6 border border-slate-700">
+                    <h3 class="text-lg font-bold text-emerald-400 mb-3 flex items-center">
+                        <i class="fa-solid fa-cubes mr-2"></i> ຫຼັກການ Prompting Core (5 ອົງປະກອບ)
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs">
+                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                            <span class="font-bold text-emerald-400 block mb-1">1. Role (ບົດບາດ)</span>
+                            <span class="text-slate-300">ກຳນົດໃຫ້ AI ເປັນໃຜ ເຊັ່ນ: "ທ່ານແມ່ນວິສະວະກອນປະປາ..."</span>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                            <span class="font-bold text-emerald-400 block mb-1">2. Task (ວຽກງານ)</span>
+                            <span class="text-slate-300">ລະບຸສິ່ງທີ່ຕ້ອງການໃຫ້ເຮັດ ເຊັ່ນ: "ສຸບສາເຫດນ້ຳເສຍ..."</span>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                            <span class="font-bold text-emerald-400 block mb-1">3. Context (ບໍລິບົດ)</span>
+                            <span class="text-slate-300">ໃຫ້ຂໍ້ມູນສະພາບແວດລ້ອມ ເຊັ່ນ: "ເພື່ອສະເໜີໃນທີ່ປະຊຸມ..."</span>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                            <span class="font-bold text-emerald-400 block mb-1">4. Constraints (ຂໍ້ຈຳກັດ)</span>
+                            <span class="text-slate-300">ຂໍ້ຫ້າມ ຫຼື ເງື່ອນໄຂ ເຊັ່ນ: "ບໍ່ເກີນ 5 ຂໍ້, ໃຊ້ພາສາທາງການ..."</span>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                            <span class="font-bold text-emerald-400 block mb-1">5. Format (ຮູບແບບ)</span>
+                            <span class="text-slate-300">ຮູບແບບຜົນລຸ່ມ ເຊັ່ນ: "ຕາຕະລາງ, Bullet points..."</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Prompt Builder Widget -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 border border-emerald-500/30 shadow-xl">
+                    <h3 class="text-lg font-bold text-white mb-2 flex items-center">
+                        <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 mr-2"></i> เครื่องมือทดลองสร้าง Prompt (Interactive Lao Prompt Builder)
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-6">ຕື່ມຂໍ້ມູນລຸ່ມນີ້ເພື່ອໃຫ້ລະບົບປະສົມປະສານເປັນ Prompt ທີ່ສົມບູນແບບພາສາລາວ</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Role (ບົດບາດ):</label>
+                            <input type="text" id="builder-role" value="ທ່ານແມ່ນວິສະວະກອນຊ່ຽວຊານລະບົບນ້ຳປະປາ" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Task (ວຽກງານ):</label>
+                            <input type="text" id="builder-task" value="ວິເຄາະສາເຫດຂອງການເກີດນ້ຳສູນເສຍ (NRW) ໃນລະບົບທໍ່ປະປາ" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Context (ບໍລິບົດ):</label>
+                            <input type="text" id="builder-context" value="ນຳໃຊ້ສຳລັບການລາຍງານໃນທີ່ປະຊຸມບໍລິຫານປະຈຳເດືອນ" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Constraints & Format (ຂໍ້ຈຳກັດ & ຮູບແບບ):</label>
+                            <input type="text" id="builder-format" value="ສຸບບໍ່ເກີນ 5 ຂໍ້, ໃຊ້ຮູບແບບ Bullet Points, ພາສາທາງການເຂົ້າໃຈງ່າຍ" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Live Result Box -->
+                    <div class="bg-slate-950 rounded-xl p-4 border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-semibold text-emerald-400">ຜົນລຸ່ມ Prompt ທີ່ສ້າງໄດ້:</span>
+                            <button onclick="copyGeneratedPrompt()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs rounded-lg transition flex items-center">
+                                <i class="fa-regular fa-copy mr-1"></i> ກັອບປີ້ Prompt
+                            </button>
+                        </div>
+                        <p id="generated-prompt-output" class="text-xs text-slate-300 font-mono leading-relaxed bg-slate-900/80 p-3 rounded border border-slate-800">
+                            <!-- JS Will generate text here -->
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: LEVEL 2 ==================== -->
+        <div id="tab-level2" class="tab-content space-y-8">
+            <div class="border-b border-slate-800 pb-5">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    ระດັບ 2 (Level 2)
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນກາງ: Data Analytics & Technical Workflows</h2>
+                <p class="text-slate-400 text-sm mt-1">ການນຳໃຊ້ AI ໃນການຈັດການຂໍ້ມູນ, ວິເຄາະຂໍ້ມູນເທັກນິກ ແລະ ງານວິສະວະກຳ</p>
+            </div>
+
+            <!-- Lesson Checklist 2 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-blue-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l2_1')" id="check_l2_1" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">2.1 ວິເຄາະຂໍ້ມູນ Excel/CSV</span>
+                        <span class="text-xs text-slate-400">ກວດຫາ Anomalies & Minimum Night Flow (MNF)</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-blue-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l2_2')" id="check_l2_2" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">2.2 ປຽບທຽບ Spec & คำนวณ</span>
+                        <span class="text-xs text-slate-400">ປຽບທຽບ VFD vs PLC ແລະ ສູດວິສະວະກຳ</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-blue-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l2_3')" id="check_l2_3" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">2.3 ດຶງຂໍ້ມູນ PDF/OCR</span>
+                        <span class="text-xs text-slate-400">แปลงរូបພາບເອກະສານເປັນຂໍ້ຄວາມ ແລະ ສຸບລາຍງານ</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Engineering Use Case Simulation -->
+            <div class="bg-slate-800/60 rounded-2xl p-6 border border-slate-700 space-y-6">
+                <h3 class="text-lg font-bold text-blue-400 flex items-center">
+                    <i class="fa-solid fa-chart-line mr-2"></i> ຕົວຢ່າງການນຳໃຊ້: ວິເຄາະທໍ່ນ້ຳລົ່ວດ້ວຍ MNF (Minimum Night Flow)
+                </h3>
+                
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    ໃນງານວິສະວະກຳປະປາ, ເຮົາສາມາດປ້ອນຂໍ້ມູນການໄຫຼຂອງນ້ຳ (Flow Rate Data) ໃນຊ່ວງເວລາກາງຄືນ (02:00 - 04:00) ໃຫ້ AI ช่วยตรวจจับจุดผิดปกติ เพื่อประเมินปริมาณน้ำสูญเสีย.
+                </p>
+
+                <!-- Data Table Preview -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-slate-300 border border-slate-700 rounded-lg overflow-hidden">
+                        <thead class="bg-slate-900 text-slate-200 uppercase font-semibold">
+                            <tr>
+                                <th class="p-2.5">ເວລາ (Time)</th>
+                                <th class="p-2.5">ອັດຕາໄຫຼປົກຕິ (m³/h)</th>
+                                <th class="p-2.5">ອັດຕາໄຫຼວັດໄດ້ (m³/h)</th>
+                                <th class="p-2.5">ສະຖານະ (Status)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 bg-slate-950/50">
+                            <tr>
+                                <td class="p-2.5">01:00</td>
+                                <td class="p-2.5">15.2</td>
+                                <td class="p-2.5">15.5</td>
+                                <td class="p-2.5 text-emerald-400">ປົກຕິ</td>
+                            </tr>
+                            <tr class="bg-red-500/10">
+                                <td class="p-2.5 font-bold text-red-400">03:00 (MNF)</td>
+                                <td class="p-2.5">8.0</td>
+                                <td class="p-2.5 font-bold text-red-400">24.5 ↑</td>
+                                <td class="p-2.5 font-bold text-red-400">ສົງໄສທໍ່ລົ່ວ (High Leak)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5">05:00</td>
+                                <td class="p-2.5">30.0</td>
+                                <td class="p-2.5">42.0</td>
+                                <td class="p-2.5 text-amber-400">ສູງກວ່າປົກຕິ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                    <span class="text-xs font-bold text-blue-400 block mb-2">Prompt ທີ່ໃຊ້ໃນການວິເຄາະ:</span>
+                    <p class="text-xs text-slate-300 font-mono">
+                        "ຊ່ວຍວິເຄາະຂໍ້ມູນ Flow Rate ຈາກຕາຕະລາງນີ້. ຊ່ວຍລະບຸວ່າຊ່ວງເວລາ 03:00 MNF ມີຄວາມຜິດປົກກະຕິແນວໃດ? ຄຳນວນປະລິມານນ້ຳລົ່ວໄຫຼປະມານ (m³/h) ແລະ ແນະນຳ 3 ຂັ້ນຕອນສຳລັບທີມວິສະວະກອນໃນການລົງກວດເຊັກພື້ນທີ່ DMA."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: LEVEL 3 ==================== -->
+        <div id="tab-level3" class="tab-content space-y-8">
+            <div class="border-b border-slate-800 pb-5">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                    ລະດັບ 3 (Level 3)
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນສູງ: System Integration & Process Automation</h2>
+                <p class="text-slate-400 text-sm mt-1">ການເຊື່ອມຕໍ່ AI ເຂົ້າກັບລະບົບເອກະສານ, ຖານຂໍ້ມູນ ແລະ Automation Workflows</p>
+            </div>
+
+            <!-- Lesson Checklist 3 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-purple-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l3_1')" id="check_l3_1" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">3.1 RAG Knowledge Base</span>
+                        <span class="text-xs text-slate-400">ສ້າງ Bot ອ່ານເອກະສານ SOP & ຄູ່ມືວິສະວະກຳ</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-purple-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l3_2')" id="check_l3_2" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">3.2 Automated Document Flow</span>
+                        <span class="text-xs text-slate-400">ອັດໂຕໂນມັດສຸບລາຍງານ ແລະ ຈັດໝວດເອກະສານ</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-purple-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l3_3')" id="check_l3_3" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">3.3 Predictive Maintenance</span>
+                        <span class="text-xs text-slate-400">ວິເຄາະ O&M Logbook ຄາດການອຸປະກອນເພ</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Workflow Architecture Diagram / Steps -->
+            <div class="bg-slate-800/60 rounded-2xl p-6 border border-slate-700">
+                <h3 class="text-lg font-bold text-purple-400 mb-4 flex items-center">
+                    <i class="fa-solid fa-diagram-project mr-2"></i> ໂຄງສ້າງການເຮັດວຽກຂອງ RAG (Retrieval-Augmented Generation)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center text-xs">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-purple-500/30">
+                        <i class="fa-solid fa-file-pdf text-2xl text-red-400 mb-2"></i>
+                        <span class="font-bold text-white block mb-1">1. Documents</span>
+                        <span class="text-slate-400">ອັບໂຫຼດຄູ່ມື SOP, ມາດຕະຖານວິສະວະກຳ PDF</span>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-purple-500/30">
+                        <i class="fa-solid fa-database text-2xl text-purple-400 mb-2"></i>
+                        <span class="font-bold text-white block mb-1">2. Vector Database</span>
+                        <span class="text-slate-400">แปลงຂໍ້ຄວາມເປັນ Vector Embeddings</span>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-purple-500/30">
+                        <i class="fa-solid fa-robot text-2xl text-brand-400 mb-2"></i>
+                        <span class="font-bold text-white block mb-1">3. AI Search & Reasoning</span>
+                        <span class="text-slate-400">ຄົ້ນຫາຂໍ້ມູນທີ່ກ່ຽວຂ້ອງ ແລະ ປະມວນຜົນ</span>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-purple-500/30">
+                        <i class="fa-solid fa-message text-2xl text-emerald-400 mb-2"></i>
+                        <span class="font-bold text-white block mb-1">4. Precise Answer</span>
+                        <span class="text-slate-400">ຕອບຄຳຖາມອ້າງອີງຕາມເອກະສານອົງກອນ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: LEVEL 4 ==================== -->
+        <div id="tab-level4" class="tab-content space-y-8">
+            <div class="border-b border-slate-800 pb-5">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    ລະດັບ 4 (Level 4)
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ຂັ້ນຊ່ຽວຊານ: Custom AI Solutions & IoT/GIS Integration</h2>
+                <p class="text-slate-400 text-sm mt-1">ການອອກແບບລະບົບ AI ເພື່ອແກ້ໄຂບັນຫາສະເພາະທາງ, ເຊື່ອມຕໍ່ SCADA, GIS, ແລະ Industrial IoT</p>
+            </div>
+
+            <!-- Lesson Checklist 4 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-amber-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l4_1')" id="check_l4_1" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">4.1 No-Code AI Assistant</span>
+                        <span class="text-xs text-slate-400">ພັດທະນາ AI ດ້ວຍ Dify / Flowise</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-amber-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l4_2')" id="check_l4_2" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">4.2 Industrial IoT & SCADA</span>
+                        <span class="text-xs text-slate-400">ເຊື່ອມຕໍ່ຂໍ້ມູນ Real-time sensor & SCADA</span>
+                    </div>
+                </label>
+                <label class="flex items-start space-x-3 bg-slate-800/80 p-4 rounded-xl border border-slate-700 cursor-pointer hover:border-amber-500/50">
+                    <input type="checkbox" onchange="toggleLesson('l4_3')" id="check_l4_3" class="mt-1 w-4 h-4 rounded text-brand-500 bg-slate-900 border-slate-700">
+                    <div>
+                        <span class="text-sm font-bold text-white block">4.3 Smart Water & NRW Mgmt</span>
+                        <span class="text-xs text-slate-400">ລະບົບວິເຄາະນ້ຳສູນເສຍປະສານ GIS & Smart Meter</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Case Study Box -->
+            <div class="bg-gradient-to-r from-amber-950/30 via-slate-900 to-slate-900 rounded-2xl p-6 border border-amber-500/30">
+                <h3 class="text-lg font-bold text-amber-400 mb-3 flex items-center">
+                    <i class="fa-solid fa-microchip mr-2"></i> Case Study: Smart Non-Revenue Water (NRW) Management
+                </h3>
+                <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                    ການລວມ AI Assistant ເຂົ້າກັບຂໍ້ມູນ GIS Map ແລະ ລະບົບ Smart Meter ເພື່ອປະມວນຜົນແບບອັດໂຕໂນມັດ:
+                </p>
+                <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                    <li>ດຶງຂໍ້ມູນແຮງດັນນ້ຳ Real-time ຈາກ SCADA sensor ใน DMA.</li>
+                    <li>AI ປະມວນຜົນเปรียบเทียบกับแบบจำลอง Hydraulic Model ใน GIS.</li>
+                    <li>แจ้งเตือนพิกัดท่อแตกหรือท่อรั่วผ่านระบบ Telegram/Line Notify ทันที.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: PROMPTS & TOOLS LIBRARY ==================== -->
+        <div id="tab-prompts" class="tab-content space-y-8">
+            <div class="border-b border-slate-800 pb-5">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">ຄັງ Prompt ພ້ອມໃຊ້ & ລິ້ງເຄື່ອງມື AI</h2>
+                <p class="text-slate-400 text-sm mt-1">ລວມ Prompt ສຳເລັດຮູບສຳລັບງານວິສະວະກຳ ງານເອກະສານ ແລະ ເຄື່ອງມື AI ຊັ້ນນຳ</p>
+            </div>
+
+            <!-- Search & Category Filter -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+                    <input type="text" id="prompt-search-input" onkeyup="filterPrompts()" placeholder="ຄົ້ນຫາ Prompt..." class="w-full bg-slate-900 border border-slate-700 pl-9 pr-4 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                    <button onclick="filterPromptCategory('all')" class="prompt-cat-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-500 text-white active">ທັງໝົດ</button>
+                    <button onclick="filterPromptCategory('eng')" class="prompt-cat-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-700 text-slate-300 hover:bg-slate-600">ວິສະວະກຳ</button>
+                    <button onclick="filterPromptCategory('doc')" class="prompt-cat-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-700 text-slate-300 hover:bg-slate-600">ເອກະສານ</button>
+                    <button onclick="filterPromptCategory('self')" class="prompt-cat-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-700 text-slate-300 hover:bg-slate-600">ພັດທະນາຕົນເອງ</button>
+                </div>
+            </div>
+
+            <!-- Prompt Cards Grid -->
+            <div id="prompts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Card 1 -->
+                <div class="prompt-card bg-slate-800/60 border border-slate-700 rounded-2xl p-5 flex flex-col justify-between" data-category="eng" data-keywords="ວິສະວະກຳ ປັ໊ມນ້ຳ pump specification">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                ວິສະວະກຳ
+                            </span>
+                            <button onclick="copyTextFromElement('p1-text')" class="text-xs bg-slate-700 hover:bg-brand-600 text-slate-200 px-2.5 py-1 rounded transition flex items-center">
+                                <i class="fa-regular fa-copy mr-1"></i> ກັອບປີ້
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-white text-sm mb-2">ປຽບທຽບ Specification ຂອງອຸປະກອນວິສະວະກຳ</h4>
+                        <p id="p1-text" class="text-xs text-slate-300 font-mono bg-slate-950 p-3 rounded-lg border border-slate-800 leading-relaxed mb-4">
+"ທ່ານແມ່ນວິສະວະກອນເຄື່ອງກົນ. ຊ່ວຍປຽບທຽບ Specification ຂອງ Pump A ແລະ Pump B ຈາກຂໍ້ມູນລຸ່ມນີ້ ໃນຮູບແບບຕາຕະລາງ ໂດຍເນັ້ນ: Flow Rate, Head, Efficiency, Power Consumption, ແລະ ແນະນຳວ່າรุ่นໃດເໝາະສົມກັບງານລະບົບສົ່ງນ້ຳໄລຍະໄກ."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="prompt-card bg-slate-800/60 border border-slate-700 rounded-2xl p-5 flex flex-col justify-between" data-category="doc" data-keywords="ເອກະສານ ສຸບປະຊຸມ meeting summary">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                ງານເອກະສານ
+                            </span>
+                            <button onclick="copyTextFromElement('p2-text')" class="text-xs bg-slate-700 hover:bg-brand-600 text-slate-200 px-2.5 py-1 rounded transition flex items-center">
+                                <i class="fa-regular fa-copy mr-1"></i> ກັອບປີ້
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-white text-sm mb-2">ສຸບປະຊຸມ ແລະ ແຍກ Action Items ອັດໂຕໂນມັດ</h4>
+                        <p id="p2-text" class="text-xs text-slate-300 font-mono bg-slate-950 p-3 rounded-lg border border-slate-800 leading-relaxed mb-4">
+"ຊ່ວຍສຸບເນື້ອຫາການປະຊຸມລຸ່ມນີ້: 1) ຫົວຂໍ້ຫຼັກ 2) ມະຕິທີ່ປະຊຸມ 3) Action Items (ລະບຸຜູ້ຮັບຜິດຊອບ ແລະ ກຳນົດສົ່ງ). ໃຊ້ພາສາທາງການ ຈັດຮູບແບບໃຫ້ອ່ານງ່າຍ."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="prompt-card bg-slate-800/60 border border-slate-700 rounded-2xl p-5 flex flex-col justify-between" data-category="eng" data-keywords="ວິສະວະກຳ ท่อรั่ว leakage water balance">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                ວິສະວະກຳ
+                            </span>
+                            <button onclick="copyTextFromElement('p3-text')" class="text-xs bg-slate-700 hover:bg-brand-600 text-slate-200 px-2.5 py-1 rounded transition flex items-center">
+                                <i class="fa-regular fa-copy mr-1"></i> ກັອບປີ້
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-white text-sm mb-2">ວິເຄາະ Water Balance & Non-Revenue Water</h4>
+                        <p id="p3-text" class="text-xs text-slate-300 font-mono bg-slate-950 p-3 rounded-lg border border-slate-800 leading-relaxed mb-4">
+"ທ່ານແມ່ນຊ່ຽວຊານດ້ານ Non-Revenue Water (NRW). ຊ່ວຍວິເຄາະຂໍ້ມູນ System Input Volume ແລະ Billed Authorized Consumption ລຸ່ມນີ້ ເພື່ອຄຳນວນ % NRW ແລະ ແນະນຳມາ his ຄຸ້ມຄອງ."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="prompt-card bg-slate-800/60 border border-slate-700 rounded-2xl p-5 flex flex-col justify-between" data-category="self" data-keywords="ພັດທະນາຕົນເອງ socrates English quiz">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                ພັດທະນາຕົນເອງ
+                            </span>
+                            <button onclick="copyTextFromElement('p4-text')" class="text-xs bg-slate-700 hover:bg-brand-600 text-slate-200 px-2.5 py-1 rounded transition flex items-center">
+                                <i class="fa-regular fa-copy mr-1"></i> ກັອບປີ້
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-white text-sm mb-2">AI Tutor: ຝຶກຄຳຖາມ-ຕອບດ້ານວິສະວະກຳ</h4>
+                        <p id="p4-text" class="text-xs text-slate-300 font-mono bg-slate-950 p-3 rounded-lg border border-slate-800 leading-relaxed mb-4">
+"ເຮັດບົດບາດເປັນຄູຝຶກສອນ (Socratic Tutor). ຊ່ວຍຕັ້ງຄຳຖາມ 3 ຂໍ້ ເພື່ອທົດສອບຄວາມເຂົ້າໃຈຂອງຂ້ອຍກ່ຽວກັບ Principles of Hydraulic Modeling โดยถามทีละข้อ."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- External AI Tool Links -->
+            <div class="bg-slate-800/40 rounded-2xl p-6 border border-slate-700">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-brand-400 mr-2"></i> ລິ້ງເຄື່ອງມື AI ທີ່ແນະນຳ ສຳລັບການຮຽນຮູ້ & ປະຕິບັດງານ
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                    <a href="https://aistudio.google.com" target="_blank" class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-brand-500 transition group">
+                        <div class="font-bold text-white mb-1 group-hover:text-brand-400 flex items-center justify-between">
+                            Google AI Studio <i class="fa-solid fa-external-link text-[10px]"></i>
+                        </div>
+                        <p class="text-slate-400">ນຳໃຊ້ Gemini API, ประมวลผล Context Long-context PDF ໃຫຍ່ໆໄດ້ດີเยี่ยม</p>
+                    </a>
+                    <a href="https://chatgpt.com" target="_blank" class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-emerald-500 transition group">
+                        <div class="font-bold text-white mb-1 group-hover:text-emerald-400 flex items-center justify-between">
+                            ChatGPT <i class="fa-solid fa-external-link text-[10px]"></i>
+                        </div>
+                        <p class="text-slate-400">LLM ສຳລັບການສົນທະນາ, ວິເຄາະຂໍ້ມູນ ແລະ ຂຽນ Code เบื้องต้น</p>
+                    </a>
+                    <a href="https://claude.ai" target="_blank" class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-purple-500 transition group">
+                        <div class="font-bold text-white mb-1 group-hover:text-purple-400 flex items-center justify-between">
+                            Claude AI <i class="fa-solid fa-external-link text-[10px]"></i>
+                        </div>
+                        <p class="text-slate-400">ໂດດເດັ່ນດ້ານການຂຽນເອກະສານ, ວິເຄາະໂຄດ ແລະ ພາສາທີ່ເປັນທຳມະຊາດ</p>
+                    </a>
+                    <a href="https://dify.ai" target="_blank" class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-amber-500 transition group">
+                        <div class="font-bold text-white mb-1 group-hover:text-amber-400 flex items-center justify-between">
+                            Dify.ai <i class="fa-solid fa-external-link text-[10px]"></i>
+                        </div>
+                        <p class="text-slate-400">Platform No-Code ສຳລັບສ້າງ AI Application & RAG Knowledge Base</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: QUIZ ==================== -->
+        <div id="tab-quiz" class="tab-content space-y-8">
+            <div class="border-b border-slate-800 pb-5">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20">
+                    Knowledge Check
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">ແບບທົດສອບປະເມີນຄວາມຮູ້ (AI Evaluation Quiz)</h2>
+                <p class="text-slate-400 text-sm mt-1">ທົດສອບຄວາມເຂົ້າໃຈຫຼັກການນຳໃຊ້ AI ທັງ 4 ລະດັບ</p>
+            </div>
+
+            <!-- Quiz Container -->
+            <div class="bg-slate-800/70 border border-slate-700 rounded-2xl p-6 sm:p-8 space-y-8">
+                <!-- Question 1 -->
+                <div class="quiz-item space-y-3">
+                    <h4 class="font-bold text-white text-sm">1. ອົງປະກອບອັນໃດ **ບໍ່ແມ່ນ** ໂຄງສ້າງຫຼັກຂອງ Prompting Core (Role-Task-Context-Constraints-Format)?</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q1" value="A" class="mr-2 text-brand-500"> A. Role (ບົດບາດ)
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q1" value="B" class="mr-2 text-brand-500"> B. Task (ວຽກງານ)
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q1" value="C" class="mr-2 text-brand-500" id="q1-correct"> C. Programming Language (ພາສາຂຽນໂປຣແກຣມ)
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q1" value="D" class="mr-2 text-brand-500"> D. Format (ຮູບແບບ)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="quiz-item space-y-3">
+                    <h4 class="font-bold text-white text-sm">2. ໃນງານວິສະວະກຳປະປາ, ການກວດເຊັກ Minimum Night Flow (MNF) ດ້ວຍ AI ມີປະໂຫຍດຫຼັກແນວໃດ?</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q2" value="A" class="mr-2 text-brand-500" id="q2-correct"> A. ວິເຄາະ ແລະ ຕັດສິນຄວາມຜິດປົກກະຕິຂອງທໍ່ນ້ຳລົ່ວຊຶມໃນຊ່ວງກາງຄືນ
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q2" value="B" class="mr-2 text-brand-500"> B. ເພີ່ມແຮງດັນນ້ຳອັດໂຕໂນມັດ
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q2" value="C" class="mr-2 text-brand-500"> C. ຄິດໄລ່ເງິນຄ່ານ້ຳປະປາ
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q2" value="D" class="mr-2 text-brand-500"> D. ບໍ່ມີຂໍ້ຖືກ
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="quiz-item space-y-3">
+                    <h4 class="font-bold text-white text-sm">3. ເທັກໂນໂລຢີ RAG (Retrieval-Augmented Generation) ຊ່ວຍແກ້ໄຂບັນຫາໃດຂອງ AI?</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q3" value="A" class="mr-2 text-brand-500"> A. ເຮັດໃຫ້ AI ຕອບໄວຂຶ້ນ 100 ເທົ່າ
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q3" value="B" class="mr-2 text-brand-500" id="q3-correct"> B. ຊ່ວຍໃຫ້ AI ຕອບຄຳຖາມໂດຍອ້າງອີງຈາກເອກະສານ SOP ພາຍໃນຂອງອົງກອນໄດ້ຢ່າງຖືກຕ້ອງ
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q3" value="C" class="mr-2 text-brand-500"> C. ໃຊ້ແທນຊ່າງວິສະວະກອນໃນສະໜາມ
+                        </label>
+                        <label class="p-3 bg-slate-900 rounded-lg border border-slate-800 flex items-center cursor-pointer hover:border-slate-600">
+                            <input type="radio" name="q3" value="D" class="mr-2 text-brand-500"> D. ຖືກທຸກຂໍ້
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button & Result -->
+                <div class="pt-4 border-t border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <button onclick="submitQuiz()" class="w-full sm:w-auto px-6 py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-semibold rounded-xl transition shadow-lg shadow-pink-600/25">
+                        ສົ່ງຄຳຕອບ & ກວດຜົນ
+                    </button>
+                    <div id="quiz-result" class="hidden text-sm font-bold p-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-200">
+                        <!-- Score display -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 AI Learning Roadmap for Engineers & Document Management. All rights reserved.</p>
+            <p class="mt-1">ສ້າງขึ้นเพื่อการเรียนรู้การใช้งาน AI ในการทำงานจริง ภาษาลาว</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // State management
+        const LESSON_KEYS = [
+            'l1_1', 'l1_2', 'l1_3',
+            'l2_1', 'l2_2', 'l2_3',
+            'l3_1', 'l3_2', 'l3_3',
+            'l4_1', 'l4_2', 'l4_3'
+        ];
+
+        window.onload = function() {
+            loadProgress();
+            setupPromptBuilderListeners();
+            updateGeneratedPrompt();
+        };
+
+        // Navigation Tab Switching
+        function switchTab(tabId) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab
+            const targetTab = document.getElementById('tab-' + tabId);
+            if(targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            // Update nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                if(btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('bg-slate-800', 'text-white');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-white');
+                }
+            });
+
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle Mobile Navigation
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Progress Tracking Persistence
+        function toggleLesson(key) {
+            const checkbox = document.getElementById('check_' + key);
+            if(checkbox) {
+                localStorage.setItem('ai_roadmap_' + key, checkbox.checked ? 'true' : 'false');
+            }
+            updateProgressUI();
+        }
+
+        function loadProgress() {
+            LESSON_KEYS.forEach(key => {
+                const saved = localStorage.getItem('ai_roadmap_' + key);
+                const checkbox = document.getElementById('check_' + key);
+                if(checkbox && saved === 'true') {
+                    checkbox.checked = true;
+                }
+            });
+            updateProgressUI();
+        }
+
+        function updateProgressUI() {
+            let completed = 0;
+            LESSON_KEYS.forEach(key => {
+                const checkbox = document.getElementById('check_' + key);
+                if(checkbox && checkbox.checked) {
+                    completed++;
+                }
+            });
+
+            const total = LESSON_KEYS.length;
+            const percentage = Math.round((completed / total) * 100);
+
+            // Update progress elements
+            const percentEl = document.getElementById('global-progress-percent');
+            const statusEl = document.getElementById('progress-status-text');
+            const progressBar = document.getElementById('main-progress-bar');
+
+            if(percentEl) percentEl.textContent = percentage + '%';
+            if(statusEl) statusEl.textContent = `ສໍາເລັດ: ${completed} / ${total} ບົດ`;
+            if(progressBar) progressBar.style.width = percentage + '%';
+        }
+
+        // Interactive Prompt Builder Logic
+        function setupPromptBuilderListeners() {
+            const inputs = ['builder-role', 'builder-task', 'builder-context', 'builder-format'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.addEventListener('input', updateGeneratedPrompt);
+                }
+            });
+        }
+
+        function updateGeneratedPrompt() {
+            const role = document.getElementById('builder-role').value;
+            const task = document.getElementById('builder-task').value;
+            const context = document.getElementById('builder-context').value;
+            const format = document.getElementById('builder-format').value;
+
+            const text = `"${role}. ຊ່ວຍ ${task}. ບໍລິບົດ: ${context}. ເງື່ອນໄຂ & ຮູບແບບ: ${format}."`;
+            document.getElementById('generated-prompt-output').textContent = text;
+        }
+
+        function copyGeneratedPrompt() {
+            const text = document.getElementById('generated-prompt-output').textContent;
+            copyToClipboard(text);
+        }
+
+        // Helper Copy Function
+        function copyTextFromElement(elementId) {
+            const el = document.getElementById(elementId);
+            if(el) {
+                copyToClipboard(el.textContent.trim());
+            }
+        }
+
+        function copyToClipboard(text) {
+            // Using standard execCommand for iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('ກັອບປີ້ Prompt เรียบร้อยแล้ว!');
+            } catch (err) {
+                showToast('ບໍ່ສາມາດກັອບປີ້ໄດ້');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Toast Notification
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        // Search & Filter Prompts
+        function filterPrompts() {
+            const query = document.getElementById('prompt-search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.prompt-card');
+
+            cards.forEach(card => {
+                const keywords = card.getAttribute('data-keywords').toLowerCase();
+                const text = card.textContent.toLowerCase();
+                if(keywords.includes(query) || text.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterPromptCategory(category) {
+            const cards = document.querySelectorAll('.prompt-card');
+            const btns = document.querySelectorAll('.prompt-cat-btn');
+
+            btns.forEach(btn => btn.classList.replace('bg-brand-500', 'bg-slate-700'));
+            event.target.classList.replace('bg-slate-700', 'bg-brand-500');
+
+            cards.forEach(card => {
+                if(category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Quiz Evaluation Logic
+        function submitQuiz() {
+            let score = 0;
+            if(document.getElementById('q1-correct').checked) score++;
+            if(document.getElementById('q2-correct').checked) score++;
+            if(document.getElementById('q3-correct').checked) score++;
+
+            const resultBox = document.getElementById('quiz-result');
+            resultBox.classList.remove('hidden');
+
+            if(score === 3) {
+                resultBox.className = "text-sm font-bold p-3 rounded-lg bg-emerald-500/20 border border-emerald-500 text-emerald-300";
+                resultBox.innerHTML = `<i class="fa-solid fa-trophy mr-2"></i> ຍອດຢ່ຽມ! ທ່ານໄດ້ ${score}/3 ຄະແນນ (ຜ່ານ 100%)`;
+            } else {
+                resultBox.className = "text-sm font-bold p-3 rounded-lg bg-amber-500/20 border border-amber-500 text-amber-300";
+                resultBox.innerHTML = `<i class="fa-solid fa-circle-info mr-2"></i> ທ່ານໄດ້ ${score}/3 ຄະແນນ. ລອງທົບທວນບົດຮຽນ ແລະ ທົດລອງໃໝ່ອີກຄັ້ງ!`;
+            }
+        }
+    </script>
+</body>
+</html>
